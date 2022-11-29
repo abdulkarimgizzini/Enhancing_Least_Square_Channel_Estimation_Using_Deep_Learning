@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 import h5py
 from keras.callbacks import ModelCheckpoint
 
-snr = 4
+snr = 7 # SNR Index 1: 0dB, 2:5dB, 3:10dB, 4:20dB, etc...
 # Load Matlab DataSets
 mat = h5py.File('./MatLab_Codes/Data/DNN_Dataset/Dataset_{}.mat'.format(snr), 'r')
 X = np.array(mat['Preamble_Error_Correction_Dataset']['X'])
