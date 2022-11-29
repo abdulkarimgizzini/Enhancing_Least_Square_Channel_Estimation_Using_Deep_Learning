@@ -73,6 +73,8 @@ for n_snr = 1:N_SNR
          Hfe_LS(:,n_ch) = hfe_ls;
          Hfe_MMSE(:,n_ch) = hfe_mmse; 
     end
+    % Save Hf, Hfe_LS
+    save(['./Dataset_' num2str(n_snr)], 'Hf', 'Hfe_LS');
 end
 
 %% Averaging over channel realizations
