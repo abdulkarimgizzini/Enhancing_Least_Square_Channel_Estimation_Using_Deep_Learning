@@ -1,6 +1,6 @@
 clc;clearvars;close all;
 DNN_index = 30;
-load('Data\ErrSet');
+load('ErrSet');
 SNR_p   = (0:10:30)';
 %% 
 N_SNR   = size(SNR_p,1);
