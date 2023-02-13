@@ -119,3 +119,5 @@ grid on;
 legend('Analytical-Ls', 'sim-LS', 'Analytical-MMSE', 'sim-MMSE')
 xlabel('Preamble SNR')
 ylabel('Average Error per subcarrier')
+
+save('ErrSet.mat','Err_LSth','Err_LSsim', 'Err_MMSEth', 'Err_MMSEsim')
