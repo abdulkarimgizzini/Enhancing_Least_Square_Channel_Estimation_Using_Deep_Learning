@@ -1,18 +1,20 @@
 import pickle
+from scipy.io import loadmat
 import numpy as np
 import scipy.io
 from keras.models import load_model
-import h5py
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-
-snr = np.arange(1, 7)
-t_snr = 4
+import os
+snr = np.arange(1, 8)
+t_snr = 7
 for j in snr:
-    dataset_path = './MatLab_Codes/Data/DNN_Dataset/Dataset_{}.mat'.format(j)
-    mat = h5py.File(dataset_path, 'r')
-    X = np.array(mat['Preamble_Error_Correction_Dataset']['X'])
-    Y = np.array(mat['Preamble_Error_Correction_Dataset']['Y'])
+    dataset_path = './DNN_Dataset_{}.mat'.format(j)
+    mat = loadmat(dataset_path)
+    Dataset = mat['Preamble_Error_Correction_Dataset']
+    Dataset = Dataset[0, 0]
+    X = Dataset['X']
+    Y = Dataset['Y']
     print('Loaded Dataset Inputs: ', X.shape)
     print('Loaded Dataset Outputs: ', Y.shape)
     # Normalizing Datasets
@@ -40,8 +42,6 @@ for j in snr:
     with open(result_path, 'wb') as f:
         pickle.dump([Original_Testing_X, Original_Testing_Y, Prediction_Y], f)
 
-
-for j in snr:
     source_name = './DNN_Results_{}.pickle'.format(j)
     dest_name = './DNN_Results_{}.mat'.format(j)
     a = pickle.load(open(source_name, "rb"))
@@ -51,6 +51,13 @@ for j in snr:
         'corrected_y_{}'.format(j): a[2]
     })
     print("Data successfully converted to .mat file ")
+    print("Data successfully converted to .mat file ")
+    os.remove(result_path)
+
+
+
+
+
 
 
 
