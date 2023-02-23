@@ -1,17 +1,16 @@
 clc;clearvars;close all;
 DNN_index = 30;
 load('ErrSet');
-SNR_p   = (0:10:30)';
+SNR_p   = (0:5:30)';
 %% 
 N_SNR   = size(SNR_p,1);
 Err_DNN = zeros(N_SNR,1);
 Phf     = zeros(N_SNR,1);
 for i = 1:size(SNR_p,1) 
-    load(['Data\Results\DNN' num2str(DNN_index) 'dB\DNN_Results_' num2str(i)]);
+    load(['./DNN_Results_' num2str(i)]);
     [O_HLS, O_Hf, Processed_DNN_H_HL ] = ProcessPythonData(eval(['test_x_',num2str(i)]),eval(['test_y_',num2str(i)]),eval(['corrected_y_',num2str(i)])); 
     Err_DNN (i) = Err_DNN(i)+ norm(O_Hf-Processed_DNN_H_HL).^2;
     Phf(i)  = Phf(i)  + norm(O_Hf)^ 2;
-    return
 end
 
 Err_DNN = Err_DNN ./ size (O_Hf,2);
@@ -19,19 +18,19 @@ Phf = Phf ./ size (O_Hf,2);
 Err_DNN_normalized = Err_DNN ./ Phf;
 
 figure,
-semilogy(SNR_p, Err_LSth(1:4,:) ,'k--','LineWidth',2);
+semilogy(SNR_p, Err_LSth ,'k--','LineWidth',2);
 hold on;
-semilogy(SNR_p,Err_LSsim(1:4,:),'k+','LineWidth',2);
+semilogy(SNR_p,Err_LSsim,'k+','LineWidth',2);
 hold on;
-semilogy(SNR_p,Err_MMSEth(1:4,:),'k--','LineWidth',2);
+semilogy(SNR_p,Err_MMSEth,'k--','LineWidth',2);
 hold on;
-semilogy(SNR_p,Err_MMSEsim(1:4,:),'ko','LineWidth',2);
+semilogy(SNR_p,Err_MMSEsim,'ko','LineWidth',2);
 hold on;
 semilogy(SNR_p,Err_DNN_normalized,'r-d','LineWidth',2);
 grid on;
 legend('Analytical-Ls', 'sim-LS', 'Analytical-MMSE', 'sim-MMSE',['DNN' num2str(DNN_index)],'location','best')
-xlabel('Preamble SNR')
-ylabel('Average Error per subcarrier')
+xlabel('SNR (dB)')
+ylabel('NMSE')
 
 
 function [Processed_Orginal_Testing_X,Processed_Orginal_Testing_Y,Predicted_Testing_Y] =ProcessPythonData(a,b,c)
