@@ -1,17 +1,18 @@
-import numpy as np
-from keras.initializers import TruncatedNormal
+from keras import Sequential
+from keras.callbacks import ModelCheckpoint
+from keras.initializers.initializers_v1 import TruncatedNormal
 from keras.layers import Dense
-from keras.models import Sequential
+from scipy.io import loadmat
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-import h5py
-from keras.callbacks import ModelCheckpoint
 
 snr = 7 # SNR Index 1: 0dB, 2:5dB, 3:10dB, 4:20dB, etc...
 # Load Matlab DataSets
-mat = h5py.File('./MatLab_Codes/Data/DNN_Dataset/Dataset_{}.mat'.format(snr), 'r')
-X = np.array(mat['Preamble_Error_Correction_Dataset']['X'])
-Y = np.array(mat['Preamble_Error_Correction_Dataset']['Y'])
+mat = loadmat('./DNN_Dataset_{}.mat'.format(snr))
+Dataset = mat['Preamble_Error_Correction_Dataset']
+Dataset = Dataset[0, 0]
+X = Dataset['X']
+Y = Dataset['Y']
 print('Loaded Dataset Inputs: ', X.shape)
 print('Loaded Dataset Outputs: ', Y.shape)
 
@@ -32,7 +33,10 @@ print('Testing samples: ', test_X.shape[0])
 # Build the model.
 init = TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
 model = Sequential([
-    Dense(units=52, activation='relu', input_dim=104,
+    Dense(units=104, activation='relu', input_dim=104,
+          kernel_initializer=init,
+          bias_initializer=init),
+    Dense(units=104, activation='relu',
           kernel_initializer=init,
           bias_initializer=init),
     Dense(units=104, kernel_initializer=init,
