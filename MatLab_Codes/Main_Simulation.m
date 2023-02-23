@@ -39,6 +39,8 @@ rchan.Seed  = init_seed;
 
 %% Main Simulation 
 for n_snr = 1:N_SNR
+    disp(['Running Simulation, SNR = ', num2str(SNR_p(n_snr))]);
+    tic;      
     Hfe_LS = zeros(Kon, N_CH);
     Hfe_MMSE = zeros(Kon, N_CH);
     Hf =  zeros(Kon, N_CH);
@@ -75,6 +77,7 @@ for n_snr = 1:N_SNR
     end
     % Save Hf, Hfe_LS
     save(['./Dataset_' num2str(n_snr)], 'Hf', 'Hfe_LS');
+    toc;
 end
 
 %% Averaging over channel realizations
